@@ -1,0 +1,318 @@
+setwd("C:\\Users\\shiva\\OneDrive\\Desktop\\Fall 2019 - sem1\\Big Data\\assgnmt2\\question2")
+getwd()
+
+#reading the csv data
+#Here we have 23 features and the dataset has already been differentiated into training and testing sets
+#the data is on cardiac Single Proton Emission Computed Tomography (SPECT) images. Each patient classified into two categories: normal(positive) and abnormal(negative).
+#The database of 267 SPECT image sets (patients) was processed to extract features that summarize the original SPECT images. The continuous feature pattern was processed to obtain 22 binary feature patterns.
+train <- read.csv("trainSpect.csv")
+test <- read.csv("testSpect.csv")
+
+
+totalcol <- ncol(train)
+problable0 <- (length(which(train[,totalcol]== "negative")))/(totalcol)
+problable1 <- (length(which(train[,totalcol]== "positive")))/(totalcol)
+
+problable <- setNames(data.frame(matrix(ncol = 4, nrow = ncol(train))), c("pF0T0","pF1T0","pF0T1","pF1T1"))
+1
+#as there are 2 observations in each feature we will take m and p as below:
+m <- 2
+p <- 1/m
+
+#calcualting probabilities of each feature and its observations
+for ( p in 1:ncol(train))
+{
+  if(p == totalcol)
+  {
+    problable[p,1] <- (length(which((train[,p]== "negative") & (train[,totalcol]== "negative"))))/(length(train[,ncol(train)] == "negative"))
+    problable[p,2] <- (length(which((train[,p]== "positive") & (train[,totalcol]== "negative"))))/(length(train[,ncol(train)] == "negative"))
+    problable[p,3] <- (length(which((train[,p]== "negative") & (train[,totalcol]== "positive"))))/(length(train[,ncol(train)] == "positive"))
+    problable[p,4] <- (length(which((train[,p]== "positive") & (train[,totalcol]== "positive"))))/(length(train[,ncol(train)] == "positive"))
+  }
+  else
+  {
+    problable[p,1] <- (length(which((train[,p]== 0) & (train[,totalcol]== "negative"))))/(length(train[,ncol(train)] == 0))
+    problable[p,2] <- (length(which((train[,p]== 1) & (train[,totalcol]== "negative"))))/(length(train[,ncol(train)] == 0))
+    problable[p,3] <- (length(which((train[,p]== 0) & (train[,totalcol]== "positive"))))/(length(train[,ncol(train)] == 1))
+    problable[p,4] <- (length(which((train[,p]== 1) & (train[,totalcol]== "positive"))))/(length(train[,ncol(train)] == 1))
+  }
+  }
+predictedtest <- test
+predictedtest$prediction <- c("")
+
+#running the test dataset to predict the class label
+for (r in 1:nrow(test))
+{
+  col10 <- col20 <- col30 <- col40 <- col50 <- col60 <- col70 <- col80 <- col90 <- col100 <- col110 <- col120 <- col130 <- col140 <- col150 <- col160 <- col170 <- col180 <- col190 <- col200 <- col210 <- col220 <- 0
+  col11<- col21<- col31<- col41<- col51<- col61<- col71<- col81<- col91<- col11 <- col111 <- col121 <- col131 <- col141 <- col151 <- col161 <- col171 <- col181 <- col191 <- col201 <- col211 <- col221 <- 0
+  if(test[r,"f1"] == 0)  
+  {
+    col10 <- problable[1,1]
+    col11 <- problable[1,3]
+  }
+  else if (test[r,"f1"] == 1)  
+  {
+    col10 <- problable[1,2]
+    col11 <- problable[1,4]
+  }
+  
+  if(test[r,"f2"] == 0)  
+  {
+    col20 <- problable[2,1]
+    col21 <- problable[2,3]
+  }
+  else if (test[r,"f2"] == 1)  
+  {
+    col20 <- problable[2,2]
+    col21 <- problable[2,4]
+  }
+  
+  if(test[r,"f3"] == 0)  
+  {
+    col30 <- problable[3,1]
+    col31 <- problable[3,3]
+  }
+  else if (test[r,"f3"] == 1)  
+  {
+    col30 <- problable[3,2]
+    col31 <- problable[3,4]
+  }
+  
+  if(test[r,"f4"] == 0)  
+  {
+    col40 <- problable[4,1]
+    col41 <- problable[4,3]
+  }
+  else if (test[r,"f4"] == 1)  
+  {
+    col40 <- problable[4,2]
+    col41 <- problable[4,4]
+  }
+  
+  if(test[r,"f5"] == 0)  
+  {
+    col50 <- problable[5,1]
+    col51 <- problable[5,3]
+  }
+  else if (test[r,"f5"] == 1)  
+  {
+    col50 <- problable[5,2]
+    col51 <- problable[5,4]
+  }
+  
+  if(test[r,"f6"] == 0)  
+  {
+    col60 <- problable[6,1]
+    col61 <- problable[6,3]
+  }
+  else if (test[r,"f6"] == 1)  
+  {
+    col60 <- problable[6,2]
+    col61 <- problable[6,4]
+  }
+  
+  if(test[r,"f7"] == 0)  
+  {
+    col70 <- problable[7,1]
+    col71 <- problable[7,3]
+  }
+  else if (test[r,"f7"] == 1)  
+  {
+    col70 <- problable[7,2]
+    col71 <- problable[7,4]
+  }
+  
+  if(test[r,"f8"] == 0)  
+  {
+    col80 <- problable[8,1]
+    col81 <- problable[8,3]
+  }
+  else if (test[r,"f8"] == 1)  
+  {
+    col80 <- problable[8,2]
+    col81 <- problable[8,4]
+  }
+  
+  if(test[r,"f9"] == 0)  
+  {
+    col90 <- problable[9,1]
+    col91 <- problable[9,3]
+  }
+  else if (test[r,"f9"] == 1)  
+  {
+    col90 <- problable[9,2]
+    col91 <- problable[9,4]
+  }
+  
+  if(test[r,"f10"] == 0)  
+  {
+    col100 <- problable[10,1]
+    col101 <- problable[10,3]
+  }
+  else if (test[r,"f10"] == 1)  
+  {
+    col100 <- problable[10,2]
+    col101 <- problable[10,4]
+  }
+  
+  if(test[r,"f11"] == 0)  
+  {
+    col110 <- problable[11,1]
+    col111 <- problable[11,3]
+  }
+  else if (test[r,"f11"] == 1)  
+  {
+    col110 <- problable[11,2]
+    col111 <- problable[11,4]
+  }
+  
+  if(test[r,"f12"] == 0)  
+  {
+    col120 <- problable[12,1]
+    col121 <- problable[12,3]
+  }
+  else if (test[r,"f12"] == 1)  
+  {
+    col120 <- problable[12,2]
+    col121 <- problable[12,4]
+  }
+  
+  if(test[r,"f13"] == 0)  
+  {
+    col130 <- problable[13,1]
+    col131 <- problable[13,3]
+  }
+  else if (test[r,"f13"] == 1)  
+  {
+    col130 <- problable[13,2]
+    col131 <- problable[13,4]
+  }
+  
+  if(test[r,"f14"] == 0)  
+  {
+    col140 <- problable[14,1]
+    col141 <- problable[14,3]
+  }
+  else if (test[r,"f14"] == 1)  
+  {
+    col140 <- problable[14,2]
+    col141 <- problable[14,4]
+  }
+  
+  if(test[r,"f15"] == 0)  
+  {
+    col150 <- problable[15,1]
+    col151 <- problable[15,3]
+  }
+  else if (test[r,"f15"] == 1)  
+  {
+    col150 <- problable[15,2]
+    col151 <- problable[15,4]
+  }
+  
+  if(test[r,"f16"] == 0)  
+  {
+    col160 <- problable[16,1]
+    col161 <- problable[16,3]
+  }
+  else if (test[r,"f16"] == 1)  
+  {
+    col160 <- problable[16,2]
+    col161 <- problable[16,4]
+  }
+  
+  if(test[r,"f17"] == 0)  
+  {
+    col170 <- problable[17,1]
+    col171 <- problable[17,3]
+  }
+  else if (test[r,"f17"] == 1)  
+  {
+    col170 <- problable[17,2]
+    col171 <- problable[17,4]
+  }
+  
+  if(test[r,"f18"] == 0)  
+  {
+    col180 <- problable[18,1]
+    col181 <- problable[18,3]
+  }
+  else if (test[r,"f18"] == 1)  
+  {
+    col180 <- problable[18,2]
+    col181 <- problable[18,4]
+  }
+  
+  if(test[r,"f19"] == 0)  
+  {
+    col190 <- problable[19,1]
+    col191 <- problable[19,3]
+  }
+  else if (test[r,"f19"] == 1)  
+  {
+    col190 <- problable[19,2]
+    col191 <- problable[19,4]
+  }
+  
+  if(test[r,"f20"] == 0)  
+  {
+    col200 <- problable[20,1]
+    col201 <- problable[20,3]
+  }
+  else if (test[r,"f20"] == 1)  
+  {
+    col200 <- problable[20,2]
+    col201 <- problable[20,4]
+  }
+  
+  if(test[r,"f21"] == 0)  
+  {
+    col210 <- problable[21,1]
+    col211 <- problable[21,3]
+  }
+  else if (test[r,"f21"] == 1)  
+  {
+    col210 <- problable[21,2]
+    col211 <- problable[21,4]
+  }
+  
+  if(test[r,"f22"] == 0)  
+  {
+    col220 <- problable[22,1]
+    col221 <- problable[22,3]
+  }
+  else if (test[r,"f22"] == 1)  
+  {
+    col220 <- problable[22,2]
+    col221 <- problable[22,4]
+  }
+  
+  p0 <- ((col10 * col20 * col30 * col40 * col50 * col60 * col70 * col80 * col90 * col100 * col110 * col120 * col130 * col140 * col150 * col160 * col170 * col180 * col190 * col200 * col210 * col220) + (m*p))/(problable0 + m)
+  
+  p1 <- ((col11 * col21 * col31 * col41 * col51 * col61 * col71 * col81 * col91 * col11  * col111  * col121  * col131  * col141  * col151  * col161  * col171  * col181  * col191  * col201  * col211  * col221) + (m*p))/(problable1+m)
+  if(p0 < p1)
+  {
+    predictedtest[r,24] <- "positive"
+  }
+  else
+  {
+    predictedtest[r,24] <- "negative"
+  }
+}
+
+write.csv(predictedtest, "predictions.csv") #stores the dataframe in csv format in the specified path
+
+#calculating accuracy,sensitivity and specificity
+TP <- length(which(predictedtest[,23] == "positive" & predictedtest[,24]=="positive"))
+TN <- length(which(predictedtest[,23] == "negative" & predictedtest[,24]=="negative"))
+FP <- length(which(predictedtest[,23] == "negative" & predictedtest[,24]=="positive"))
+FN <- length(which(predictedtest[,23] == "positive" & predictedtest[,24]=="negative"))
+
+error = (FP + FN)/(TN+TP+FP+FN)
+accuracy = 1 - error
+specificity = TP/(TP+FN)
+sensitivity = TN/(TN+FP)
+
+print(accuracy)
+print(specificity)
+print(sensitivity)
